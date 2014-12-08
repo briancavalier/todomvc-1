@@ -9,59 +9,63 @@ var css = require('csst');
 var model = require('./model');
 var view = require('./view');
 
-var MulticastSource = require('most/lib/source/MulticastSource');
-var Stream = require('most/lib/Stream');
-
 require('./main.css');
 
 exports.main = function() {
-	var todos = LocalStorageStore.at('fabulous-todos').map(initTodos);
+	var todosStore = LocalStorageStore.at('fabulous-todos').map(initTodos);
 
 	var todoApp = document.getElementById('todoapp');
 
-	var actions = controller(todoApp);
-	var updates = model(actions, todos);
-	updates = new Stream(new MulticastSource(updates.source));
+	var actions = createController(todoApp);
+	var updates = model(actions, todosStore);
 	var todoList = view(renderTodoList, updates, document.getElementById('todo-list'));
 
-	var state = updates.map(function(todos) {
-		var array = todos.get();
-		var complete = array.reduce(function(complete, todo) {
-			return todo.complete ? complete + 1 : complete;
-		}, 0);
-		return MemoryStore.of({ complete: complete, total: array.length });
-	});
+	var stats = updates.map(getStats);
 
-	var toggleAll = view(renderCompleteAll, state, document.getElementById('toggle-all'));
-	var footer = view(renderFooter, state, document.getElementById('footer'));
+	var toggleAll = view(renderCompleteAll, stats, document.getElementById('toggle-all'));
+	var footer = view(renderFooter, stats, document.getElementById('footer'));
+	var cardinality = initCounts(stats, todoApp);
 
+	var filters = initFilters(todoApp);
+
+	most.merge(todoList, toggleAll, footer, cardinality, filters).drain();
+};
+
+function initCounts (state, todoApp) {
 	var todosCount = css.withNode(css.cardinality('todos'), todoApp);
 	var completedCount = css.withNode(css.cardinality('complete'), todoApp);
 	var remainingCount = css.withNode(css.cardinality('remaining'), todoApp);
-	var cardinality = state.tap(function(store) {
-		return store.map(function(state) {
+
+	return state.tap(function (store) {
+		return store.map(function (state) {
 			todosCount(state.total);
 			completedCount(state.complete);
 			remainingCount(state.total - state.complete);
 			return state;
 		});
 	});
+}
 
-	var filter = css.withNode(css.map(function(x) {
-		return x.replace(/^.*#\/?/,'') || 'all';
+function initFilters (todoApp) {
+	var filter = css.withNode(css.map(function (x) {
+		return x.replace(/^.*#\/?/, '') || 'all';
 	}), todoApp);
 
-	var routes = most.fromEvent('hashchange', window)
-		.map(function(e) {
-			return e.newURL;
-		})
+	return most.fromEvent('hashchange', window)
+		.map(function (e) { return e.newURL; })
 		.startWith(location.hash)
 		.tap(filter);
+}
 
-	most.merge(todoList, toggleAll, footer, cardinality, routes).drain();
-};
+function getStats(todos) {
+	var array = todos.get();
+	var complete = array.reduce(function(complete, todo) {
+		return todo.complete ? complete + 1 : complete;
+	}, 0);
+	return MemoryStore.of({ complete: complete, total: array.length });
+}
 
-function controller(el) {
+function createController(el) {
 	var add = most.fromEventWhere(preventDefault, 'submit', el.querySelector('.add-todo'))
 		.map(addTodo);
 
