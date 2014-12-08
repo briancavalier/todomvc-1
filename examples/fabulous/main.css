@@ -1,0 +1,24 @@
+.todos-0 #footer {
+    display: none;
+}
+
+.complete-0 #clear-completed {
+    display: none;
+}
+
+.all [href="#/"],
+.active [href="#/active"],
+.completed [href="#/completed"] {
+    font-weight: bold;
+}
+
+.active #todo-list .completed {
+    display: none;
+}
+
+.completed #todo-list [data-id] {
+    display: none;
+}
+.completed #todo-list .completed {
+    display: block;
+}

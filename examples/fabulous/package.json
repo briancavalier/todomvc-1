@@ -1,0 +1,20 @@
+{
+  "name": "fabulous-todomvc",
+  "version": "1.0.0",
+  "description": "> Short description of the framework provided by the official website.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "csst": "briancavalier/csst",
+    "most": "git://github.com/cujojs/most#v0.10",
+    "rave": "^0.4.5",
+    "rave-load-css": "^0.5.1",
+    "swym": "^0.2.0",
+    "todomvc-common": "^0.3.1",
+    "virtual-dom": "0.0.23"
+  }
+}
