@@ -2,6 +2,7 @@ var most = require('most');
 var list = require('most/lib/base');
 var MemoryStore = require('swym/store/MemoryStore');
 var LocalStorageStore = require('swym/store/LocalStorageStore');
+
 var h = require('virtual-dom/h');
 var css = require('csst');
 
@@ -79,43 +80,41 @@ function controller(el) {
 	return most.merge(add, remove, complete, completeAll, clear);
 }
 
-
-
 function renderTodoList(todos) {
-	return h('ul', { id: 'todo-list' }, todos.map(function(todo) {
+	return h('ul#todo-list', todos.map(function(todo) {
 		return h('li', {
 			className: todo.complete ? 'completed' : '',
 			attributes: { 'data-id': todo.id } },[
-			h('div', { className: 'view'}, [
-				h('input', { type: 'checkbox', className: 'toggle', checked: todo.complete }),
+			h('div.view', [
+				h('input.toggle', { type: 'checkbox', checked: todo.complete }),
 				h('label', [todo.description]),
-				h('button', { className: 'destroy' })
+				h('button.destroy')
 			]),
-			h('input', { className: 'edit', value: todo.description })
+			h('input.edit', { value: todo.description })
 		]);
 	}));
 }
 
 function renderCompleteAll(state) {
 	var checked = state.total > 0 && state.total === state.complete;
-	return h('input', { id: 'toggle-all', type: 'checkbox', checked: checked });
+	return h('input#toggle-all', { type: 'checkbox', checked: checked });
 }
 
 function renderFooter(state) {
 	var remaining = (state.total - state.complete);
-	return h('footer', { id: 'footer' }, [
-		h('span', { id: 'todo-count' }, [
+	return h('footer#footer', [
+		h('span#todo-count', [
 			h('strong', [''+remaining]),
 			remaining === 1 ? ' item left' : ' items left'
 		]),
-		h('ul', { id: 'filters' }, [
+		h('ul#filters', [
 			h('li', [
 				h('a', { href: '#/' }, ['All']),
 				h('a', { href: '#/active' }, ['Active']),
 				h('a', { href: '#/completed' }, ['Completed'])
 			])
 		]),
-		h('button', { id: 'clear-completed' }, ['Clear completed (' + state.complete + ')'])
+		h('button#clear-completed', ['Clear completed (' + state.complete + ')'])
 	]);
 }
 
