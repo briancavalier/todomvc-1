@@ -216,7 +216,7 @@ function initTodos(todos) {
 	if(todos == null) {
 		// For fun, generate a bunch of todos
 		// Set this to 5000 for real fun
-		var n = 5000;
+		var n = 10;
 		todos = [];
 		for(var i=0; i<n; ++i) {
 			todos.push(Todo.create('Todo ' + i));
