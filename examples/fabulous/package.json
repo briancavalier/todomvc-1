@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "csst": "briancavalier/csst",
-    "most": "git://github.com/cujojs/most#v0.10",
+    "most": "git://github.com/cujojs/most#master",
     "rave": "^0.4.5",
     "rave-load-css": "^0.5.1",
     "swym": "^0.2.0",
