@@ -1,50 +1,35 @@
-# Framework Name TodoMVC Example
+# Reactive programming TodoMVC Example
 
-> Short description of the framework provided by the official website.
+This is not a framework.  It's an example of putting together several interesting, independent pieces to make a reactive style TodoMVC:
 
-> _[Framework Name - framework.com](link-to-framework)_
-
-
-## Learning Framework Name
-
-The [Framework Name website]() is a great resource for getting started.
-
-Here are some links you may find helpful:
-
-* [Documentation]()
-* [API Reference]()
-* [Applications built with Framework Name]()
-* [Blog]()
-* [FAQ]()
-* [Framework Name on GitHub]()
-
-Articles and guides from the community:
-
-* [Article 1]()
-* [Article 2]()
-
-Get help from other Framework Name users:
-
-* [Framework Name on StackOverflow](http://stackoverflow.com/questions/tagged/____)
-* [Mailing list on Google Groups]()
-* [Framework Name on Twitter](http://twitter.com/____)
-* [Framework Name on Google +]()
-
-_If you have other helpful links to share, or find any of the links above no longer work, please [let us know](https://github.com/tastejs/todomvc/issues)._
-
+* [RaveJS](https://github.com/RaveJS/rave) - Zero-configuration modular application bootstrap and development
+* [most](https://github.com/cujojs/most) - Reactive streams
+* [swym](https://github.com/briancavalier/swym) - Experimental data stores and differential synchronization
+* [virtual-dom](https://github.com/Matt-Esch/virtual-dom) - Virtual DOM diffing and patching
 
 ## Implementation
 
-How is the app structured? Are there deviations from the spec? If so, why?
+The architecture is simple and uni-directional:
 
+DOM -(event)-> controller -(action)-> model -(update)-> view
+
+* A controller turns relevant DOM Events into a stream of actions (functions).
+* The model applies the stream of actions to data inside a store.
+* The model produces a stream representing changes to the data.
+* The view renders the stream of data changes to a virtual DOM tree
+* The view performs a diff with the previous virtual DOM tree and patches the real DOM.
+
+The application uses CommonJS modules with no loader configuration.  RaveJS uses existing package manager metadata (eg `package.json`) to self-configure, and execute `exports.main` in `main.js` (also as specified in `package.json`).
+
+NOTE: Inline todo editing is not yet implemented.
 
 ## Running
 
-If there is a build step required to get the example working, explain it here.
-
-To run the app, spin up an HTTP server and visit http://localhost/.../myexample/.
-
+1. Clone the repo
+1. `cd examples/fabulous`
+1. `npm install`
+1. spin up an HTTP server and visit http://localhost/.../fabulous/
 
 ## Credit
 
-This TodoMVC application was created by [you]().
+This TodoMVC application was created by [@cujojs](https://github.com/cujojs).
