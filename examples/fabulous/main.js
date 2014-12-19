@@ -64,18 +64,20 @@ function createController(el) {
  * @returns {VTree} virtual dom tree
  */
 function renderTodoList(todos) {
-	return h('ul#todo-list', todos.map(function(todo) {
-		return h('li', {
-			className: todo.complete ? 'completed' : '',
-			attributes: { 'data-id': todo.id } },[
-			h('div.view', [
-				h('input.toggle', { type: 'checkbox', checked: todo.complete }),
-				h('label', todo.description),
-				h('button.destroy')
-			]),
-			h('input.edit', { value: todo.description })
-		]);
-	}));
+	return h('ul#todo-list', todos.map(renderTodo));
+}
+
+function renderTodo(todo) {
+	return h('li', {
+		className: todo.complete ? 'completed' : '',
+		attributes: { 'data-id': todo.id } },[
+		h('.view', [
+			h('input.toggle', { type: 'checkbox', checked: todo.complete }),
+			h('label', todo.description),
+			h('button.destroy')
+		]),
+		h('input.edit', { value: todo.description })
+	]);
 }
 
 /**
